@@ -1,0 +1,9 @@
+{
+  "name": "VibrantVisuals",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/Priscillalala/VibrantVisuals",
+  "description": "Brings back the saturated visuals of early access.",
+  "dependencies": [
+    "bbepis-BepInExPack-5.4.2115"
+  ]
+}
