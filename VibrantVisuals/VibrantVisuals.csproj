@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>netstandard2.1</TargetFramework>
 		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\manifest.json" Link="manifest.json" />
-		<None Include="..\CHANGELOG.md" Link="CHANGELOG.md" />
-		<None Include="..\README.md" Link="README.md" />
-	</ItemGroup>
+	<PropertyGroup>
+		<ProfilePluginsPath>C:\Users\sunde\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Testing Seekers\BepInEx\plugins</ProfilePluginsPath>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="BepInEx.Core" Version="5.4.21" />
@@ -23,8 +21,16 @@
 		</Reference>
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="..\manifest.json" />
+		<Content Include="..\CHANGELOG.md" />
+		<Content Include="..\README.md" />
+		<Content Include="..\icon.png" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="copy &quot;$(TargetPath)&quot; &quot;C:\Users\sunde\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Testing Default\BepInEx\plugins&quot;" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)" />
+		<Copy SourceFiles="@(Content)" DestinationFolder="$(ProfilePluginsPath)\$(ProjectName)" />
 	</Target>
 
 </Project>

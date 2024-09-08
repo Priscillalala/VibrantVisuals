@@ -50,7 +50,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
             """);
         if (postProcessingType.Value != PostProcessingType.Vanilla)
         {
-            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/ppRunBase.asset").Completed += handle =>
+            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/PostProcessing/ppRunBase.asset").Completed += handle =>
             {
                 if (handle.Result.TryGetSettings(out ColorGrading colorGrading))
                 {
@@ -81,7 +81,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
             """);
         if (golemplainsPostProcessingType.Value == PostProcessingType.Vibrant)
         {
-            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/ppSceneGolemplainsFoggy.asset").Completed += handle =>
+            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/PostProcessing/ppSceneGolemplainsFoggy.asset").Completed += handle =>
             {
                 if (handle.Result.TryGetSettings(out RampFog rampFog))
                 {
@@ -116,7 +116,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
                         Transform pp = weather.transform.Find("PP + Amb");
                         if (pp && pp.TryGetComponent(out PostProcessVolume postProcessVolume))
                         {
-                            postProcessVolume.sharedProfile = Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/ppSceneGolemplains.asset").WaitForCompletion();
+                            postProcessVolume.sharedProfile = Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/PostProcessing/ppSceneGolemplains.asset").WaitForCompletion();
                         }
                     }
                 }
@@ -139,7 +139,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
         foggyswampPostProcessing = Config.Bind(FOGGYSWAMP, "New Post Processing", true, "Tweaks the fog on Wetland Aspect");
         if (foggyswampPostProcessing.Value)
         {
-            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/ppSceneFoggyswamp.asset").Completed += handle =>
+            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/PostProcessing/ppSceneFoggyswamp.asset").Completed += handle =>
             {
                 if (handle.Result.TryGetSettings(out RampFog rampFog))
                 {
