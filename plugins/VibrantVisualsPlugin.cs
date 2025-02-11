@@ -36,8 +36,9 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
     public ConfigEntry<PostProcessingType> golemplainsPostProcessingType;
     public ConfigEntry<bool> snowyforestAurora;
     public ConfigEntry<bool> foggyswampPostProcessing;
+    public ConfigEntry<bool> helminthroostVisibility;
 
-    public void Awake()
+    private void Awake()
     {
         const string GLOBAL = "Global";
         postProcessingType = Config.Bind(GLOBAL, "Post Processing Type", PostProcessingType.Vibrant,
@@ -143,6 +144,52 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
                     rampFog.fogOne.Override(0.4f);
                     rampFog.fogColorStart.Override(new Color32(111, 132, 124, 20));
                     rampFog.fogColorMid.Override(new Color32(76, 97, 92, 230));
+                }
+            };
+        }
+
+        const string HELMINTHROOST = "Helminth Hatchery";
+        helminthroostVisibility = Config.Bind(HELMINTHROOST, "Improved Visibility", true, "Tweak the lighting and post-processing on Helminth Hatchery to brighten the stage");
+        if (helminthroostVisibility.Value)
+        {
+            SceneManager.sceneLoaded += (scene, loadSceneMode) =>
+            {
+                if (scene.name == "helminthroost")
+                {
+                    GameObject[] rootObjects = scene.GetRootGameObjects();
+                    GameObject lighting = Array.Find(rootObjects, x => x.name == "HOLDER: Lighting");
+                    if (lighting)
+                    {
+                        Transform sun = lighting.transform.Find("Weather, Helminthroost/Directional Light (SUN)");
+                        if (sun && sun.TryGetComponent(out Light sunLight))
+                        {
+                            sunLight.intensity = 0.35f;
+                        }
+                        Transform sky = lighting.transform.Find("Sky Point Light");
+                        if (sky && sky.TryGetComponent(out Light skyLight))
+                        {
+                            skyLight.intensity = 10f;
+                        }
+                        Transform pp = lighting.transform.Find("Weather, Helminthroost/PP + Amb");
+                        if (pp && pp.TryGetComponent(out PostProcessVolume ppVolume))
+                        {
+                            ppVolume.priority = 5f;
+                        }
+                    }
+                }
+            };
+            Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/DLC2/helminthroost/ppSceneHelminth.asset").Completed += handle =>
+            {
+                if (handle.Result.TryGetSettings(out RampFog rampFog))
+                {
+                    rampFog.fogPower.Override(1.85f);
+                    rampFog.fogZero.Override(-0.28f);
+                    rampFog.fogColorMid.Override(new Color32(132, 85, 69, 170));
+                }
+                if (handle.Result.TryGetSettings(out ColorGrading colorGrading))
+                {
+                    colorGrading.gradingMode.Override(GradingMode.HighDefinitionRange);
+                    colorGrading.postExposure.Override(1.1f);
                 }
             };
         }
