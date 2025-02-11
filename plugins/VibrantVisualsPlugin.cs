@@ -1,20 +1,18 @@
-﻿global using Object = UnityEngine.Object;
-
-using System;
-using System.Security.Permissions;
-using System.Security;
+﻿using BepInEx;
+using BepInEx.Configuration;
 using HG.Reflection;
-using BepInEx;
+using System;
+using System.Security;
+using System.Security.Permissions;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
-using BepInEx.Configuration;
-using UnityEngine;
 
 [module: UnverifiableCode]
-#pragma warning disable
-[assembly: SecurityPermission(System.Security.Permissions.SecurityAction.RequestMinimum, SkipVerification = true)]
-#pragma warning restore
+#pragma warning disable CS0618 // Type or member is obsolete
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618 // Type or member is obsolete
 [assembly: SearchableAttribute.OptIn]
 
 namespace VibrantVisuals;
@@ -25,7 +23,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
     public const string
         GUID = "groovesalad." + NAME,
         NAME = "VibrantVisuals",
-        VERSION = "1.0.0";
+        VERSION = "1.0.2";
 
     public enum PostProcessingType
     {
@@ -57,7 +55,6 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
                     switch (postProcessingType.Value)
                     {
                         case PostProcessingType.Vibrant:
-                            //colorGrading.temperature.Override(2f);
                             colorGrading.tonemapper.Override(Tonemapper.Custom);
                             colorGrading.toneCurveToeStrength.Override(0.35f);
                             colorGrading.toneCurveToeLength.Override(0.6f);
@@ -76,7 +73,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
         golemplainsPostProcessingType = Config.Bind(GOLEMPLAINS, "Post Processing Type", PostProcessingType.Vibrant,
             """
             Vanilla: no changes
-            Vibrant: makes the stage a little less foggy
+            Vibrant: make the stage a little less foggy
             Classic: a mostly faithful recreation of the first version of the stage, before Hopoo made it "depressing"
             """);
         if (golemplainsPostProcessingType.Value == PostProcessingType.Vibrant)
@@ -86,7 +83,6 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
                 if (handle.Result.TryGetSettings(out RampFog rampFog))
                 {
                     rampFog.fogPower.Override(0.5f);
-                    //rampFog.fogZero.Override(0.005f);
                 }
             };
         }
@@ -124,7 +120,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
         }
 
         const string SNOWYFOREST = "Siphoned Forest";
-        snowyforestAurora = Config.Bind(SNOWYFOREST, "Brighter Aurora", true, "Makes the aurora above Siphoned Forest more visible and colorful");
+        snowyforestAurora = Config.Bind(SNOWYFOREST, "Brighter Aurora", true, "Make the aurora above Siphoned Forest more visible and colorful");
         if (snowyforestAurora.Value)
         {
             Addressables.LoadAssetAsync<Material>("RoR2/DLC1/snowyforest/matSFAurora.mat").Completed += handle =>
@@ -136,7 +132,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
         }
 
         const string FOGGYSWAMP = "Wetland Aspect";
-        foggyswampPostProcessing = Config.Bind(FOGGYSWAMP, "New Post Processing", true, "Tweaks the fog on Wetland Aspect");
+        foggyswampPostProcessing = Config.Bind(FOGGYSWAMP, "New Post Processing", true, "Tweak the fog on Wetland Aspect");
         if (foggyswampPostProcessing.Value)
         {
             Addressables.LoadAssetAsync<PostProcessProfile>("RoR2/Base/title/PostProcessing/ppSceneFoggyswamp.asset").Completed += handle =>
