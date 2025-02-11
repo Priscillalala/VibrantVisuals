@@ -23,7 +23,7 @@ public class VibrantVisualsPlugin : BaseUnityPlugin
     public const string
         GUID = "groovesalad." + NAME,
         NAME = "VibrantVisuals",
-        VERSION = "1.0.2";
+        VERSION = "1.1.0";
 
     public enum PostProcessingType
     {
